@@ -119,6 +119,16 @@ resource "coder_agent" "main" {
     interval     = 10
     timeout      = 1
   }
+
+  metadata {
+    display_name = "GPU Memory Usage"
+    key          = "8_gpu_mem"
+    script       = <<EOT
+      nvidia-smi -i 0 --query-gpu=memory.used,memory.total --format=csv,noheader,nounits | awk '{printf "%d/%d MiB\n", $1, $2}'
+    EOT
+    interval     = 10
+    timeout      = 1
+  }
 }
 
 resource "coder_app" "code-server" {
@@ -132,6 +142,22 @@ resource "coder_app" "code-server" {
 
   healthcheck {
     url       = "http://localhost:13337/healthz"
+    interval  = 5
+    threshold = 6
+  }
+}
+
+resource "coder_app" "tensorboard" {
+  agent_id     = coder_agent.main.id
+  slug         = "tensorboard"
+  display_name = "tensorboard"
+  url          = "http://localhost:6006"
+  icon         = "/icon/tensorflow.svg"
+  subdomain    = false
+  share        = "owner"
+
+  healthcheck {
+    url       = "http://localhost:6006/healthz"
     interval  = 5
     threshold = 6
   }
