@@ -6,6 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
 RUN apt-get install -y software-properties-common
 RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get update
 RUN apt-get install -y \
 	curl \
 	git \
@@ -16,6 +17,7 @@ RUN apt-get install -y \
 	python3.12-full \
 	python3.12-dev \
 	cmake \
+	gh \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN rm /usr/bin/python3
@@ -33,5 +35,5 @@ RUN useradd --groups sudo --no-create-home --shell /bin/bash ${USER} \
 	&& echo "${USER} ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/${USER} \
 	&& chmod 0440 /etc/sudoers.d/${USER}
 USER ${USER}
-ENV PATH="$PATH:~/.local/bin"
+ENV PATH="$PATH:~/.local/bin:/home/${USER}/.local/bin"
 WORKDIR /home/${USER}
