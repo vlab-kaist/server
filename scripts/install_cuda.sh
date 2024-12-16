@@ -27,10 +27,8 @@ sudo apt-get update
 
 sudo apt-get -y install \
   cuda-toolkit-12-4 \
-  nvidia-driver-550-open \
   nvidia-driver-550 \
   cuda-drivers-550 \
-  apt-transport-https \
   ca-certificates \
   curl \
   gnupg-agent \
