@@ -18,6 +18,9 @@ RUN apt-get install -y \
 	python3.12-dev \
 	cmake \
 	gh \
+	screen \
+	zip \
+	unzip \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN rm /usr/bin/python3
@@ -29,6 +32,11 @@ RUN python -m ensurepip --upgrade
 RUN pip3 install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu124
 RUN pip3 install "jax[cuda12]"
 RUN pip3 install numpy pandas matplotlib jupyterlab ipykernel tensorboard tqdm
+RUN pip3 install flake8 black mypy pytest
+
+ENV HF_HOME=/shared/.huggingface
+RUN pip3 install -U "huggingface_hub[cli]"
+RUN echo "shell /bin/bash" > $HOME/.screenrc
 
 ARG USER=coder
 RUN useradd --groups sudo --no-create-home --shell /bin/bash ${USER} \
